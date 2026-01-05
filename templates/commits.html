@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Analyse des Commits</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 100%; height: 500px;"></div>
+    <script>
+      google.charts.load('current', { packages: ['corechart'] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        fetch('/commits-data/')
+          .then(response => response.json())
+          .then(data => {
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Minute');
+            dataTable.addColumn('number', 'Nombre de Commits');
+
+            data.results.forEach(entry => {
+              // On transforme la minute en chaîne pour l'axe X
+              dataTable.addRow([entry.minute.toString(), entry.count]);
+            });
+
+            var options = {
+              title: 'Répartition des commits par minute de l\'heure',
+              hAxis: { title: 'Minute' },
+              vAxis: { title: 'Nombre de commits' },
+              legend: { position: 'none' },
+              colors: ['#e74c3c']
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(dataTable, options);
+          });
+      }
+    </script>
+  </body>
+</html>
