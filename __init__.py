@@ -32,7 +32,7 @@ def meteo():
 
 
 
-@app.route("/histogramme/")
+@app.route("/graphique/")
 def monhistogramme():
     return render_template("histogramme.html")
 
